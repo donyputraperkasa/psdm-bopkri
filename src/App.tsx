@@ -3,6 +3,7 @@ import {
   ArrowDown,
   Building2,
   CheckCircle2,
+  Hourglass,
   Search,
   ShieldCheck,
   Video,
@@ -14,15 +15,15 @@ import logo from "./assets/logo.png";
 
 const DEADLINE = new Date("2026-08-01T00:00:00+07:00").getTime();
 
-function formatCountdown(distance: number) {
-  if (distance <= 0) return "Akses telah ditutup";
+function getCountdownParts(distance: number) {
+  if (distance <= 0) return null;
 
-  const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-  const hours = Math.floor((distance / (1000 * 60 * 60)) % 24);
-  const minutes = Math.floor((distance / (1000 * 60)) % 60);
-  const seconds = Math.floor((distance / 1000) % 60);
-
-  return `${days} hari ${hours} jam ${minutes} menit ${seconds} detik`;
+  return [
+    { label: "Hari", value: Math.floor(distance / (1000 * 60 * 60 * 24)) },
+    { label: "Jam", value: Math.floor((distance / (1000 * 60 * 60)) % 24) },
+    { label: "Menit", value: Math.floor((distance / (1000 * 60)) % 60) },
+    { label: "Detik", value: Math.floor((distance / 1000) % 60) },
+  ];
 }
 
 export default function App() {
@@ -41,6 +42,7 @@ export default function App() {
   }, []);
 
   const isExpired = remainingTime <= 0;
+  const countdownParts = getCountdownParts(remainingTime);
 
   const filteredSchools = useMemo(() => {
     const keyword = searchTerm.trim().toLowerCase();
@@ -76,7 +78,7 @@ export default function App() {
 
           <div className="hidden items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-xs font-semibold text-blue-50 backdrop-blur sm:flex">
             <ShieldCheck size={15} />
-            Portal Pertemuan Resmi PSDM
+            Portal Resmi PSDM
           </div>
         </nav>
 
@@ -146,13 +148,31 @@ export default function App() {
             </div>
           </div>
           <div className={`relative flex min-h-32 items-center gap-4 overflow-hidden rounded-2xl border px-5 py-5 shadow-lg sm:rounded-3xl sm:px-6 ${isExpired ? "border-red-200 bg-red-50" : "border-amber-200 bg-amber-50"}`}>
-            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white text-amber-600">
-              ⏳
+            <span className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white shadow-sm ${isExpired ? "text-red-600" : "text-amber-600"}`}>
+              <Hourglass size={25} strokeWidth={2.2} />
             </span>
-            <div>
-              <p className="text-xs font-bold uppercase tracking-wider">Batas Akses</p>
-              <p className="font-extrabold">31 Juli 2026</p>
-              <p className="text-sm">{formatCountdown(remainingTime)}</p>
+            <div className="min-w-0 flex-1">
+                <p className="mt-0.5 font-extrabold m-4">Batas Akses sampai </p>
+
+              {countdownParts ? (
+                <div className="mt-3 grid grid-cols-4 gap-1.5 sm:gap-2">
+                  {countdownParts.map((part) => (
+                    <div
+                      key={part.label}
+                      className="rounded-xl border border-amber-200/80 bg-white/80 px-2 py-2 text-center shadow-sm"
+                    >
+                      <p className="text-lg font-black leading-none tabular-nums text-[#102a5c] sm:text-xl">
+                        {String(part.value).padStart(2, "0")}
+                      </p>
+                      <p className="mt-1 text-[9px] font-bold uppercase tracking-wide text-slate-500 sm:text-[10px]">
+                        {part.label}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="mt-2 text-sm font-bold text-red-700">Akses telah ditutup</p>
+              )}
             </div>
           </div>
         </section>

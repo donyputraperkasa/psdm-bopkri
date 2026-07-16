@@ -20,9 +20,6 @@ export default function SchoolCard({ school, isExpired }: SchoolCardProps) {
         <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-blue-100 text-blue-700">
           <Building2 size={23} strokeWidth={2.2} />
         </span>
-        <span className="text-xs font-extrabold tracking-[0.14em] text-slate-300">
-          #{String(school.id).padStart(2, "0")}
-        </span>
       </div>
 
       <div className="mt-5 flex flex-1 flex-col">
