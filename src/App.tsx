@@ -13,7 +13,7 @@ import CreateByMe from "./components/CreateByMe";
 import schools from "./data/schools";
 import logo from "./assets/logo.png";
 
-const DEADLINE = new Date("2026-08-11T00:00:00+07:00").getTime();
+const DEADLINE = new Date("2026-12-31T00:00:00+07:00").getTime();
 
 function getCountdownParts(distance: number) {
   if (distance <= 0) return null;
