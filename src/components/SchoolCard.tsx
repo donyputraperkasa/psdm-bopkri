@@ -1,59 +1,73 @@
-import { ArrowUpRight, Building2, Link2 } from "lucide-react";
-
-export interface School {
-  id: number;
-  name: string;
-  link: string;
-}
+import React from 'react'
+import { School as SchoolIcon, FileSpreadsheet, HelpCircle, Lock } from 'lucide-react'
+import type { SchoolData } from '../data/schools'
 
 interface SchoolCardProps {
-  school: School;
-  isExpired: boolean;
+  school: SchoolData
+  isExpired: boolean
 }
 
-export default function SchoolCard({ school, isExpired }: SchoolCardProps) {
-  return (
-    <article className="group relative flex h-full flex-col overflow-hidden rounded-3xl border border-slate-200/80 bg-white p-5 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-blue-200 hover:shadow-xl hover:shadow-blue-950/8 sm:p-6">
-      <div className="absolute inset-x-0 top-0 h-1 bg-blue-600" />
+export const SchoolCard: React.FC<SchoolCardProps> = ({ school, isExpired }) => {
+  const defaultWa = '6282236343404'
+  const waMessage = encodeURIComponent(
+    `Halo Mas Don, saya dari *${school.school}* membutuhkan bantuan terkait pengisian dokumen Profil PSDM BOPKRI.`
+  )
+  const helpUrl = `https://wa.me/${defaultWa}?text=${waMessage}`
 
-      <div className="flex items-start justify-between gap-4">
-        <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-blue-100 text-blue-700">
-          <Building2 size={23} strokeWidth={2.2} />
-        </span>
+  return (
+    <div className="school-card">
+      <div className="school-card-header">
+        <div className="school-title-wrap">
+          <div className="school-icon-badge">
+            <SchoolIcon size={22} />
+          </div>
+          <h3 className="school-name">{school.school}</h3>
+        </div>
       </div>
 
-      <div className="mt-5 flex flex-1 flex-col">
-        <p className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-blue-700">Unit sekolah</p>
-        <h3 className="mt-2 text-xl font-extrabold leading-7 tracking-tight text-[#102a5c]">
-          {school.name}
-        </h3>
-
-        <p className="mt-3 flex-1 text-sm leading-6 text-slate-500">
-          Klik tombol dibawah ini untuk mengisi profil SDM Sekolah Anda.
-        </p>
-
+      <div className="school-card-body">
         {isExpired ? (
-          <button
-            type="button"
-            disabled
-            className="mt-6 flex min-h-14 w-full cursor-not-allowed items-center justify-center gap-2 rounded-2xl bg-slate-300 px-5 py-4 text-base font-extrabold text-slate-600"
-          >
-            Akses Sudah Ditutup
-          </button>
+          <div className="buttons-row-one">
+            <button
+              type="button"
+              disabled
+              className="card-btn btn-disabled"
+              title="Akses pengisian profil SDM telah ditutup"
+            >
+              <Lock size={18} className="btn-icon" />
+              <span>Akses Sudah Ditutup</span>
+            </button>
+          </div>
         ) : (
+          <div className="buttons-row-one">
+            <a
+              href={school.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="card-btn btn-profil"
+              title={`Buka spreadsheet profil SDM ${school.school}`}
+            >
+              <FileSpreadsheet size={19} className="btn-icon" />
+              <span>Buka Profil SDM</span>
+            </a>
+          </div>
+        )}
+
+        <div className="buttons-row-one">
           <a
-            href={school.link}
+            href={helpUrl}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label={`Buka Dokumen ${school.name}`}
-            className="mt-6 flex min-h-14 w-full items-center justify-center gap-2.5 rounded-2xl bg-[#102a5c] px-5 py-4 text-base font-extrabold text-white shadow-md shadow-blue-950/10 transition duration-200 hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-blue-100"
+            className="card-btn btn-hubungi"
+            title="Hubungi admin melalui WhatsApp jika ada kendala"
           >
-            <Link2 size={20} />
-            Buka Profil SDM
-            <ArrowUpRight size={19} className="transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+            <HelpCircle size={19} className="btn-icon" />
+            <span>bingung ?? hubungi kami</span>
           </a>
-        )}
+        </div>
       </div>
-    </article>
-  );
+    </div>
+  )
 }
+
+export default SchoolCard
