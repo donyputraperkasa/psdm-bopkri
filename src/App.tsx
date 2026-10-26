@@ -8,6 +8,7 @@ import Announcement from './components/Announcement'
 import SchoolList from './components/SchoolList'
 import CreateByMe from './components/CreateByMe'
 import FloatingContact from './components/FloatingContact'
+import RelocationToast from './components/RelocationToast'
 
 const DEADLINE = new Date("2026-12-31T00:00:00+07:00").getTime()
 
@@ -74,6 +75,9 @@ export function App() {
 
   return (
     <div className="app-container">
+      {/* Toast / Modal Permanen Pemindahan Website */}
+      <RelocationToast />
+
       {/* Header Terpusat */}
       <Header />
 
